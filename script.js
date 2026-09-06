@@ -124,6 +124,7 @@ function spawnFloatingText(text, color) {
     setTimeout(() => el.remove(), 800);
 }
 
+// 🐱 НАСТОЯЩИЙ ПОЛНОЦЕННЫЙ ВЕКТОРНЫЙ КОТИК ВНУТРИ КОДА
 function updateUI() {
     document.getElementById('bar-hunger').style.width = petData.hunger + '%';
     document.getElementById('val-hunger').innerText = Math.round(petData.hunger) + '%';
@@ -132,38 +133,58 @@ function updateUI() {
     document.getElementById('bar-mood').style.width = petData.mood + '%';
     document.getElementById('val-mood').innerText = Math.round(petData.mood) + '%';
 
-    const cat = document.getElementById('cat-main');
-    if (!cat) return;
+    const mesh = document.getElementById('cat-mesh');
+    if (!mesh) return;
 
-    // Прямая ссылка на твою красивую картинку из первого сообщения! Фон сотрется сам.
-    cat.src = "https://postimg.co"; 
-}
+    // Базовые части тела кошечки (ушки, голова, тело, хвостик, лапки)
+    let eyesSvg = "";
+    let mouthSvg = `<path d="M46,65 Q50,68 54,65" stroke="%23ff7675" stroke-width="2" fill="none" stroke-linecap="round"/>`;
 
-function calculateOfflineProgress() {
-    const now = Date.now(); const elapsed = (now - petData.lastTime) / 1000;
-    if (elapsed <= 0) return;
-    if (isSleeping) {
-        petData.sleep = Math.min(100, petData.sleep + (elapsed * (7 / 60)));
-        petData.hunger = Math.max(0, petData.hunger - (elapsed * (0.4 / 60)));
-        if (petData.sleep >= 100) isSleeping = false;
+    if (petData.hunger <= 0 || petData.sleep <= 0 || petData.mood <= 0) {
+        // Обиделась / ушла (глаза-крестики)
+        eyesSvg = `
+            <path d="M32,46 L42,54 M42,46 L32,54" stroke="%23ff7675" stroke-width="3" stroke-linecap="round"/>
+            <path d="M58,46 L68,54 M68,46 L58,54" stroke="%23ff7675" stroke-width="3" stroke-linecap="round"/>
+        `;
+        mouthSvg = `<path d="M44,68 Q50,63 56,68" stroke="%23ff7675" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+    } else if (isSleeping) {
+        // Спит (глазки-дуги)
+        eyesSvg = `
+            <path d="M30,50 Q36,56 42,50" stroke="%23f1c40f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M58,50 Q64,56 70,50" stroke="%23f1c40f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        `;
+    } else if (petData.hunger < 40 || petData.mood < 40 || petData.sleep < 40) {
+        // Грустит (круглые испуганные зрачки)
+        eyesSvg = `
+            <circle cx="36" cy="50" r="8" fill="%23f1c40f"/> <circle cx="36" cy="50" r="4" fill="%232d3436"/>
+            <circle cx="64" cy="50" r="8" fill="%23f1c40f"/> <circle cx="64" cy="50" r="4" fill="%232d3436"/>
+        `;
+        mouthSvg = `<path d="M44,68 Q50,62 56,68" stroke="%23ff7675" stroke-width="2" fill="none"/>`;
     } else {
-        petData.hunger = Math.max(0, petData.hunger - (elapsed * (0.85 / 60)));
-        petData.sleep = Math.max(0, petData.sleep - (elapsed * (0.65 / 60)));
-        petData.mood = Math.max(0, petData.mood - (elapsed * (1.1 / 60)));
+        // Идеальное счастливое состояние (милые глазки с бликами)
+        eyesSvg = `
+            <circle cx="36" cy="50" r="8" fill="%23f1c40f"/>
+            <ellipse cx="36" cy="50" rx="2" ry="5" fill="%232d3436"/>
+            <circle cx="34" cy="47" r="1.5" fill="%23fff"/>
+            <circle cx="64" cy="50" r="8" fill="%23f1c40f"/>
+            <ellipse cx="64" cy="50" rx="2" ry="5" fill="%232d3436"/>
+            <circle cx="62" cy="47" r="1.5" fill="%23fff"/>
+        `;
     }
-    petData.lastTime = now; updateUI();
-}
 
-function feedBtn() { calculateOfflineProgress(); if(isSleeping) isSleeping = false; petData.hunger = Math.min(100, petData.hunger + 20); triggerCatJump(); spawnFloatingText("+20 🐟", "#2ecc71"); updateUI(); save(); }
-function sleepBtn() { calculateOfflineProgress(); isSleeping = true; petData.sleep = Math.min(100, petData.sleep + 30); spawnFloatingText("+30 💤", "#3498db"); updateUI(); save(); }
-function playBtn() { calculateOfflineProgress(); if(isSleeping) isSleeping = false; petData.mood = Math.min(100, petData.mood + 25); triggerCatJump(); spawnFloatingText("+25 🧸", "#ff9f43"); updateUI(); save(); }
-function resetPet() { isSleeping = false; petData = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() }; updateUI(); save(); }
-
-setInterval(() => { calculateOfflineProgress(); save(); }, 1000);
-function save() { localStorage.setItem('maya_v4_data', JSON.stringify(petData)); localStorage.setItem('maya_v4_sleep', JSON.stringify(isSleeping)); }
-function load() {
-    const d = localStorage.getItem('maya_v4_data'); const s = localStorage.getItem('maya_v4_sleep');
-    if(d) petData = JSON.parse(d); if(s) isSleeping = JSON.parse(s);
-    setSeasonByCalendar(); calculateOfflineProgress(); animateParticles();
-}
-window.addEventListener('DOMContentLoaded', load);
+    // Собираем весь SVG рисунок кошечки воедино
+    mesh.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://w3.org">
+            <!-- Хвостик -->
+            <path d="M70,75 Q85,60 80,45 Q75,35 70,45" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linecap="round"/>
+            <!-- Задние лапки/тело -->
+            <ellipse cx="50" cy="72" rx="28" ry="18" fill="%232d3436"/>
+            <!-- Передние лапки -->
+            <ellipse cx="40" cy="85" rx="6" ry="10" fill="%232d3436"/>
+            <ellipse cx="60" cy="85" rx="6" ry="10" fill="%232d3436"/>
+            <!-- Ушки -->
+            <path d="M24,44 Q10,12 36,26" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M26,40 Q16,20 33,27" fill="%23ffb8b8"/>
+            <path d="M76,44 Q90,12 64,26" fill="%232d3436" stroke="#2d3436" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M74,40 Q84,20 67,27" fill="%23ffb8b8"/>
+            <!-- Голова -->

@@ -71,30 +71,30 @@
         }
         .house-plant { position: absolute; bottom: 15px; left: 20px; font-size: 24px; z-index: 6; }
 
+        /* Контейнер для нашего встроенного SVG котика */
         .cat-box {
             position: absolute;
-            bottom: 10px; left: 50%;
+            bottom: 5px; left: 50%;
             transform: translateX(-50%);
-            width: 120px; height: 120px;
+            width: 130px; height: 130px;
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; z-index: 10;
             pointer-events: auto;
         }
         
-        .cat-image {
+        .cat-svg-container {
             width: 100%; height: 100%;
-            object-fit: contain;
             animation: breathe 4s ease-in-out infinite;
-            mix-blend-mode: multiply; /* Магическое стирание белого фона картинки */
+            transform-origin: bottom center;
         }
 
         @keyframes breathe {
             0%, 100% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.03) translateY(-2px); }
+            50% { transform: scale(1.05) translateY(-3px); }
         }
 
         .jump-animation { animation: jumpEffect 0.4s ease-out !important; }
-        @keyframes jumpEffect { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-30px); } }
+        @keyframes jumpEffect { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-35px); } }
 
         .floating-text { position: absolute; font-size: 22px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.4); pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 100; }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
@@ -142,8 +142,11 @@
             <div class="cozy-room"></div>
             <div class="house-plant" id="h-plant">🌵</div>
             
+            <!-- КЛИКАБЕЛЬНЫЙ КОТ С РУЧНЫМ ОТРЕЗКОМ ДЛЯ ЕГО ТЕЛА -->
             <div class="cat-box" id="cat-holder" onclick="triggerCatJump()">
-                <img src="" id="cat-main" class="cat-image" alt="Майя">
+                <div class="cat-svg-container" id="cat-mesh">
+                    <!-- Сюда скрипт вставит идеального векторного котика -->
+                </div>
             </div>
         </div>
 

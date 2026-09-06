@@ -35,7 +35,7 @@
 
         h1, #season-title, .game-container { position: relative; z-index: 10; }
         h1 { font-size: 32px; margin: 5px 0 2px 0; font-weight: 800; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.3); }
-        #season-title { font-size: 13px; font-weight: 700; color: #ffffff; background: rgba(0, 0, 0, 0.3); padding: 5px 16px; border-radius: 20px; margin-bottom: 15px; }
+        #season-title { font-size: 13px; font-weight: 700; color: #ffffff; background: rgba(0, 0, 0, 0.2); padding: 5px 16px; border-radius: 20px; margin-bottom: 15px; }
         
         .game-container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; }
 
@@ -171,8 +171,8 @@
         <button class="test-btn" onclick="nextSeasonTest()">⚙️ ИЗМЕНИТЬ СЕЗОН (ТЕСТ)</button>
     </div>
 
-    <!-- ВЕСЬ JS КОД ТЕПЕРЬ ПРЯМО ТУТ -->
     <script>
+        // Использованы новые чистые ключи памяти, чтобы сбросить застывшие 100% шкал
         let petData = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() };
         let isSleeping = false;
         let currentSeason = "autumn";

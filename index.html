@@ -171,6 +171,27 @@
         <button class="test-btn" onclick="nextSeasonTest()">⚙️ ИЗМЕНИТЬ СЕЗОН (ТЕСТ)</button>
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <!-- ВЕСЬ JS КОД ТЕПЕРЬ ПРЯМО ТУТ -->
+    <script>
+        let petData = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() };
+        let isSleeping = false;
+        let currentSeason = "autumn";
+
+        const canvas = document.getElementById('effects-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { if (canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; } }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = -20;
+                this.size = Math.random() * 8 + 6; this.speedY = Math.random() * 1.2 + 0.6; this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360; this.rotationSpeed = Math.random() * 2 - 1;
+                this.angle = Math.random() * 100; this.angleSpeed = Math.random() * 0.05 + 0.02;
+
+                if (currentSeason === "winter") { this.color = "rgba(255,255,255,0.7)"; this.type = "snow"; }
+                else if (currentSeason === "spring") { this.color = "rgba(255,182,193,0.8)"; this.type = "petal"; }

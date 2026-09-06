@@ -8,190 +8,144 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-            user-select: none;
-            position: relative;
-            overflow: hidden;
-            transition: background 1.2s ease;
+            margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; box-sizing: border-box; user-select: none; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, #f5cd79 0%, #e17055 100%);
         }
-
-        #effects-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        body.season-winter { background: linear-gradient(180deg, #3d3d5c 0%, #70a1ff 100%); }
-        body.season-spring { background: linear-gradient(180deg, #78e08f 0%, #f5cd79 100%); }
-        body.season-summer { background: linear-gradient(180deg, #2ae149 0%, #70a1ff 100%); }
-        body.season-autumn { background: linear-gradient(180deg, #b33939 0%, #e17055 100%); }
-
-        h1, #season-title, .game-container { position: relative; z-index: 10; }
         h1 { font-size: 32px; margin: 5px 0 2px 0; font-weight: 800; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.3); }
-        #season-title { font-size: 13px; font-weight: 700; color: #ffffff; background: rgba(0, 0, 0, 0.2); padding: 5px 16px; border-radius: 20px; margin-bottom: 15px; }
         
-        .game-container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; }
-
         .stage-wrapper {
-            position: relative;
-            width: 100%;
-            height: 250px;
-            margin-bottom: 20px;
-            background: #74b9ff;
-            border-radius: 36px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 6px solid #ffffff;
-            box-sizing: border-box;
-            z-index: 1;
-            transition: background 1.2s ease;
-        }
-
-        .hill-back { position: absolute; bottom: 0; left: -20px; width: 120%; height: 100px; background: #20bf6b; border-radius: 50% 50% 0 0; transition: background 1.2s ease; }
-        .hill-front { position: absolute; bottom: -10px; left: -40px; width: 130%; height: 80px; background: #26de81; border-radius: 60% 40% 0 0; z-index: 2; transition: background 1.2s ease; }
-        .river { position: absolute; bottom: 0; left: 30%; width: 40px; height: 90px; background: #2980b9; transform: skewX(-25deg); z-index: 1; }
-        .tree { position: absolute; bottom: 40px; right: 30px; width: 8px; height: 50px; background: #784c24; z-index: 3; }
-        .tree-leaves { position: absolute; top: -30px; left: -21px; width: 50px; height: 50px; background: #218c74; border-radius: 50%; transition: background 1.2s ease; }
-
-        .cozy-room {
-            position: absolute;
-            inset: 0;
-            border: 12px solid #8c7ae6;
-            border-radius: 30px;
-            pointer-events: none;
-            z-index: 5;
-            box-sizing: border-box;
-        }
-        .house-plant { position: absolute; bottom: 15px; left: 20px; font-size: 24px; z-index: 6; }
-
-        .cat-box {
-            position: absolute;
-            bottom: 5px; left: 50%;
-            transform: translateX(-50%);
-            width: 130px; height: 130px;
+            position: relative; width: 100%; max-width: 300px; height: 220px;
+            background: #fff5eb; border-radius: 36px; margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border: 6px solid #e17055; box-sizing: border-box;
             display: flex; justify-content: center; align-items: center;
-            cursor: pointer; z-index: 10;
-            pointer-events: auto;
         }
-        
-        .cat-svg-container {
-            width: 100%; height: 100%;
-            animation: breathe 4s ease-in-out infinite;
-            transform-origin: bottom center;
+        .window {
+            position: absolute; top: 15px; width: 45px; height: 45px;
+            border: 3px solid #f1c40f; border-radius: 8px; background: #74b9ff;
         }
 
-        @keyframes breathe {
-            0%, 100% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.05) translateY(-3px); }
-        }
+        .cat-box { width: 120px; height: 120px; cursor: pointer; margin-top: 30px; }
+        .cat-svg { width: 100%; height: 100%; animation: breathe 4s ease-in-out infinite; transform-origin: bottom center; }
+        @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04) translateY(-2px); } }
 
-        .jump-animation { animation: jumpEffect 0.4s ease-out !important; }
-        @keyframes jumpEffect { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-35px); } }
-
-        .floating-text { position: absolute; font-size: 22px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.4); pointer-events: none; animation: floatUp 0.8s ease-out forwards; z-index: 100; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
-
-        .stats-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 24px; padding: 20px; width: 100%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); margin-bottom: 20px; box-sizing: border-box; }
-        .stat-row { margin-bottom: 15px; }
+        .stats-card { background: rgba(255, 255, 255, 0.95); border-radius: 24px; padding: 20px; width: 100%; max-width: 320px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); margin-bottom: 20px; box-sizing: border-box; }
+        .stat-row { margin-bottom: 12px; }
         .stat-row:last-child { margin-bottom: 0; }
-        .stat-label { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; color: #4a5568; }
-        .progress-bar { width: 100%; height: 16px; background-color: #edf2f7; border-radius: 12px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #2ecc71, #26de81); border-radius: 12px; transition: width 0.4s ease; }
+        .stat-label { font-size: 14px; font-weight: 700; margin-bottom: 5px; display: flex; justify-content: space-between; color: #4a5568; }
+        .progress-bar { width: 100%; height: 14px; background-color: #edf2f7; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #2ecc71, #26de81); border-radius: 10px; transition: width 0.4s ease; }
         #bar-sleep { background: linear-gradient(90deg, #3498db, #45aaf2); }
         #bar-mood { background: linear-gradient(90deg, #ff9f43, #f7b731); }
         
-        .buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-        button.action-btn { background: #ffffff; color: #4b7bec; border: none; padding: 16px; border-radius: 20px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05); }
-        button.action-btn:active { transform: scale(0.94); background: #4b7bec; color: #ffffff; }
+        .buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; }
+        button.action-btn { background: #ffffff; color: #4b7bec; border: none; padding: 14px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        button.action-btn:active { transform: scale(0.95); background: #4b7bec; color: #ffffff; }
         .reset-btn { background-color: #fff5f5 !important; color: #eb4d4b !important; grid-column: span 2; margin-top: 4px; }
-        
-        .test-btn {
-            background: rgba(255, 255, 255, 0.3);
-            border: 2px solid #ffffff;
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 800;
-            margin-top: 15px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
 
-    <canvas id="effects-canvas"></canvas>
+    <h1>Майя 🐾</h1>
 
-    <div class="game-container">
-        <h1>Майя 🐾</h1>
-        <div id="season-title">Осень за окном 🍂</div>
-
-        <div class="stage-wrapper" id="sky-bg">
-            <div class="hill-back" id="h-back"></div>
-            <div class="river"></div>
-            <div class="hill-front" id="h-front"></div>
-            <div class="tree"><div class="tree-leaves" id="t-leaves"></div></div>
-            <div class="cozy-room"></div>
-            <div class="house-plant" id="h-plant">🌵</div>
-            
-            <div class="cat-box" id="cat-holder" onclick="triggerCatJump()">
-                <div class="cat-svg-container" id="cat-mesh"></div>
-            </div>
+    <div class="stage-wrapper">
+        <div class="window"></div>
+        <div class="cat-box">
+            <div id="cat-mesh" class="cat-svg"></div>
         </div>
+    </div>
 
-        <div class="stats-card">
-            <div class="stat-row">
-                <div class="stat-label"><span>🐟 Сытость</span><span id="val-hunger">100%</span></div>
-                <div class="progress-bar"><div id="bar-hunger" class="progress-fill"></div></div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-label"><span>💤 Энергия</span><span id="val-sleep">100%</span></div>
-                <div class="progress-bar"><div id="bar-sleep" class="progress-fill"></div></div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-label"><span>🧸 Настроение</span><span id="val-mood">100%</span></div>
-                <div class="progress-bar"><div id="bar-mood" class="progress-fill"></div></div>
-            </div>
+    <div class="stats-card">
+        <div class="stat-row">
+            <div class="stat-label"><span>🐟 Сытость</span><span id="val-hunger">100%</span></div>
+            <div class="progress-bar"><div id="bar-hunger" class="progress-fill"></div></div>
         </div>
-
-        <div class="buttons-grid">
-            <button class="action-btn" onclick="feedBtn()">🍼 Покормить</button>
-            <button class="action-btn" onclick="sleepBtn()">🛌 В люлю</button>
-            <button class="action-btn" onclick="playBtn()">⚽ Поиграть</button>
-            <button class="action-btn reset-btn" onclick="resetPet()">🔄 Восстановить шкалы</button>
+        <div class="stat-row">
+            <div class="stat-label"><span>💤 Энергия</span><span id="val-sleep">100%</span></div>
+            <div class="progress-bar"><div id="bar-sleep" class="progress-fill"></div></div>
         </div>
+        <div class="stat-row">
+            <div class="stat-label"><span>🧸 Настроение</span><span id="val-mood">100%</span></div>
+            <div class="progress-bar"><div id="bar-mood" class="progress-fill"></div></div>
+        </div>
+    </div>
 
-        <button class="test-btn" onclick="nextSeasonTest()">⚙️ ИЗМЕНИТЬ СЕЗОН (ТЕСТ)</button>
+    <div class="buttons-grid">
+        <button class="action-btn" onclick="feed()">🍼 Покормить</button>
+        <button class="action-btn" onclick="sleep()">🛌 В люлю</button>
+        <button class="action-btn" onclick="play()">⚽ Поиграть</button>
+        <button class="action-btn reset-btn" onclick="resetPet()">🔄 Восстановить шкалы</button>
     </div>
 
     <script>
-        // Использованы новые чистые ключи памяти, чтобы сбросить застывшие 100% шкал
-        let petData = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() };
+        let pet = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() };
         let isSleeping = false;
-        let currentSeason = "autumn";
 
-        const canvas = document.getElementById('effects-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+        function updateUI() {
+            document.getElementById('bar-hunger').style.width = pet.hunger + '%';
+            document.getElementById('val-hunger').innerText = Math.round(pet.hunger) + '%';
+            document.getElementById('bar-sleep').style.width = pet.sleep + '%';
+            document.getElementById('val-sleep').innerText = Math.round(pet.sleep) + '%';
+            document.getElementById('bar-mood').style.width = pet.mood + '%';
+            document.getElementById('val-mood').innerText = Math.round(pet.mood) + '%';
 
-        function resizeCanvas() { if (canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; } }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+            const mesh = document.getElementById('cat-mesh');
+            if (!mesh) return;
 
-        class Particle {
-            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
-            reset() {
-                this.x = Math.random() * canvas.width; this.y = -20;
-                this.size = Math.random() * 8 + 6; this.speedY = Math.random() * 1.2 + 0.6; this.speedX = Math.random() * 1 - 0.5;
-                this.rotation = Math.random() * 360; this.rotationSpeed = Math.random() * 2 - 1;
-                this.angle = Math.random() * 100; this.angleSpeed = Math.random() * 0.05 + 0.02;
+            let eyesSvg = "";
+            let mouthSvg = `<path d="M46,62 Q50,65 54,62" stroke="%23ff7675" stroke-width="2" fill="none" stroke-linecap="round"/>`;
 
-                if (currentSeason === "winter") { this.color = "rgba(255,255,255,0.7)"; this.type = "snow"; }
-                else if (currentSeason === "spring") { this.color = "rgba(255,182,193,0.8)"; this.type = "petal"; }
+            if (pet.hunger <= 0 || pet.sleep <= 0 || pet.mood <= 0) {
+                eyesSvg = `<path d="M32,44 L42,52 M42,44 L32,52 M58,44 L68,52 M68,44 L58,52" stroke="%23ff7675" stroke-width="3" stroke-linecap="round"/>`;
+                mouthSvg = `<path d="M44,66 Q50,61 56,66" stroke="%23ff7675" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+            } else if (isSleeping) {
+                eyesSvg = `<path d="M30,48 Q36,54 42,48 M58,48 Q64,54 70,48" stroke="%23f1c40f" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+            } else if (pet.hunger < 40 || pet.mood < 40 || pet.sleep < 40) {
+                eyesSvg = `<circle cx="36" cy="48" r="8" fill="%23f1c40f"/> <circle cx="36" cy="48" r="4" fill="%232d3436"/> <circle cx="64" cy="48" r="8" fill="%23f1c40f"/> <circle cx="64" cy="48" r="4" fill="%232d3436"/>`;
+                mouthSvg = `<path d="M44,66 Q50,60 56,66" stroke="%23ff7675" stroke-width="2" fill="none"/>`;
+            } else {
+                eyesSvg = `<circle cx="36" cy="48" r="8" fill="%23f1c40f"/> <ellipse cx="36" cy="48" rx="2" ry="5" fill="%232d3436"/> <circle cx="34" cy="45" r="1.5" fill="%23fff"/> <circle cx="64" cy="48" r="8" fill="%23f1c40f"/> <ellipse cx="64" cy="48" rx="2" ry="5" fill="%232d3436"/> <circle cx="62" cy="45" r="1.5" fill="%23fff"/>`;
+            }
+
+            mesh.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://w3.org">
+                    <path d="M68,70 Q82,55 78,40 Q73,30 68,40" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linecap="round"/>
+                    <ellipse cx="50" cy="68" rx="26" ry="16" fill="%232d3436"/>
+                    <ellipse cx="42" cy="80" rx="5" ry="9" fill="%232d3436"/> <ellipse cx="58" cy="80" rx="5" ry="9" fill="%232d3436"/>
+                    <path d="M26,38 Q12,8 36,22" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linejoin="round"/> <path d="M28,34 Q18,16 34,23" fill="%23ffb8b8"/>
+                    <path d="M74,38 Q88,8 64,22" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linejoin="round"/> <path d="M72,34 Q82,16 66,23" fill="%23ffb8b8"/>
+                    <circle cx="50" cy="49" r="23" fill="%232d3436"/>
+                    <path d="M38,68 Q50,58 62,68 Q50,74 38,68" fill="%23ffffff" opacity="0.2"/>
+                    ${eyesSvg}
+                    <path d="M48,55 Q50,53 52,55 L50,58 Z" fill="%23ff7675"/>
+                    ${mouthSvg}
+                    <line x1="18" y1="54" x2="3" y2="53" stroke="%23ffffff" stroke-width="1.5" opacity="0.4"/> <line x1="18" y1="59" x2="1" y2="61" stroke="%23ffffff" stroke-width="1.5" opacity="0.4"/>
+                    <line x1="82" y1="54" x2="97" y2="53" stroke="%23ffffff" stroke-width="1.5" opacity="0.4"/> <line x1="82" y1="59" x2="99" y2="61" stroke="%23ffffff" stroke-width="1.5" opacity="0.4"/>
+                </svg>
+            `;
+        }
+
+        function calculateTime() {
+            const now = Date.now(); const elapsed = (now - pet.lastTime) / 1000;
+            if (elapsed <= 0) return;
+            if (isSleeping) {
+                pet.sleep = Math.min(100, pet.sleep + (elapsed * (7 / 60)));
+                pet.hunger = Math.max(0, pet.hunger - (elapsed * (0.4 / 60)));
+                if (pet.sleep >= 100) isSleeping = false;
+            } else {
+                pet.hunger = Math.max(0, pet.hunger - (elapsed * (0.85 / 60)));
+                pet.sleep = Math.max(0, pet.sleep - (elapsed * (0.65 / 60)));
+                pet.mood = Math.max(0, pet.mood - (elapsed * (1.1 / 60)));
+            }
+            pet.lastTime = now; updateUI();
+        }
+
+        function feed() { calculateTime(); if(isSleeping) isSleeping = false; pet.hunger = Math.min(100, pet.hunger + 20); updateUI(); save(); }
+        function sleep() { calculateTime(); isSleeping = true; pet.sleep = Math.min(100, pet.sleep + 30); updateUI(); save(); }
+        function play() { calculateTime(); if(isSleeping) isSleeping = false; pet.mood = Math.min(100, pet.mood + 25); updateUI(); save(); }
+        function resetPet() { isSleeping = false; pet = { hunger: 100, sleep: 100, mood: 100, lastTime: Date.now() }; updateUI(); save(); }
+
+        setInterval(() => { calculateTime(); save(); }, 1000);
+        function save() { localStorage.setItem('maya_secure_data_v2', JSON.stringify(pet)); localStorage.setItem('maya_secure_sleep_v2', JSON.stringify(isSleeping)); }
+        function load() {

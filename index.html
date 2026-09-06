@@ -71,7 +71,6 @@
         }
         .house-plant { position: absolute; bottom: 15px; left: 20px; font-size: 24px; z-index: 6; }
 
-        /* Контейнер для нашего встроенного SVG котика */
         .cat-box {
             position: absolute;
             bottom: 5px; left: 50%;
@@ -142,11 +141,8 @@
             <div class="cozy-room"></div>
             <div class="house-plant" id="h-plant">🌵</div>
             
-            <!-- КЛИКАБЕЛЬНЫЙ КОТ С РУЧНЫМ ОТРЕЗКОМ ДЛЯ ЕГО ТЕЛА -->
             <div class="cat-box" id="cat-holder" onclick="triggerCatJump()">
-                <div class="cat-svg-container" id="cat-mesh">
-                    <!-- Сюда скрипт вставит идеального векторного котика -->
-                </div>
+                <div class="cat-svg-container" id="cat-mesh"></div>
             </div>
         </div>
 

@@ -124,8 +124,10 @@ function spawnFloatingText(text, color) {
     setTimeout(() => el.remove(), 800);
 }
 
-// 🐱 НАСТОЯЩИЙ ПОЛНОЦЕННЫЙ ВЕКТОРНЫЙ КОТИК ВНУТРИ КОДА
 function updateUI() {
+    const bHunger = document.getElementById('bar-hunger');
+    if (!bHunger) return;
+
     document.getElementById('bar-hunger').style.width = petData.hunger + '%';
     document.getElementById('val-hunger').innerText = Math.round(petData.hunger) + '%';
     document.getElementById('bar-sleep').style.width = petData.sleep + '%';
@@ -133,58 +135,32 @@ function updateUI() {
     document.getElementById('bar-mood').style.width = petData.mood + '%';
     document.getElementById('val-mood').innerText = Math.round(petData.mood) + '%';
 
-    const mesh = document.getElementById('cat-mesh');
-    if (!mesh) return;
-
-    // Базовые части тела кошечки (ушки, голова, тело, хвостик, лапки)
-    let eyesSvg = "";
-    let mouthSvg = `<path d="M46,65 Q50,68 54,65" stroke="%23ff7675" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    const cat = document.getElementById('cat-main');
+    if (!cat) return;
 
     if (petData.hunger <= 0 || petData.sleep <= 0 || petData.mood <= 0) {
-        // Обиделась / ушла (глаза-крестики)
-        eyesSvg = `
-            <path d="M32,46 L42,54 M42,46 L32,54" stroke="%23ff7675" stroke-width="3" stroke-linecap="round"/>
-            <path d="M58,46 L68,54 M68,46 L58,54" stroke="%23ff7675" stroke-width="3" stroke-linecap="round"/>
-        `;
-        mouthSvg = `<path d="M44,68 Q50,63 56,68" stroke="%23ff7675" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+        cat.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%232d3436'/><polygon points='25,35 15,10 35,25' fill='%232d3436'/><polygon points='75,35 85,10 65,25' fill='%232d3436'/><path d='M35,52 L45,60 M45,52 L35,60 M55,52 L65,60 M65,52 L55,60' stroke='%23ff7675' stroke-width='3'/><path d='M45,72 Q50,68 55,72' stroke='%23ff7675' stroke-width='2' fill='none'/></svg>";
     } else if (isSleeping) {
-        // Спит (глазки-дуги)
-        eyesSvg = `
-            <path d="M30,50 Q36,56 42,50" stroke="%23f1c40f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-            <path d="M58,50 Q64,56 70,50" stroke="%23f1c40f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        `;
+        cat.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%232d3436'/><polygon points='25,35 15,10 35,25' fill='%232d3436'/><polygon points='75,35 85,10 65,25' fill='%232d3436'/><path d='M32,55 Q38,60 44,55 M56,55 Q62,60 68,55' stroke='%23f1c40f' stroke-width='3' fill='none'/><path d='M46,68 Q50,71 54,68' stroke='%23ff7675' stroke-width='2' fill='none'/></svg>";
     } else if (petData.hunger < 40 || petData.mood < 40 || petData.sleep < 40) {
-        // Грустит (круглые испуганные зрачки)
-        eyesSvg = `
-            <circle cx="36" cy="50" r="8" fill="%23f1c40f"/> <circle cx="36" cy="50" r="4" fill="%232d3436"/>
-            <circle cx="64" cy="50" r="8" fill="%23f1c40f"/> <circle cx="64" cy="50" r="4" fill="%232d3436"/>
-        `;
-        mouthSvg = `<path d="M44,68 Q50,62 56,68" stroke="%23ff7675" stroke-width="2" fill="none"/>`;
+        cat.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%232d3436'/><polygon points='25,35 15,10 35,25' fill='%232d3436'/><polygon points='75,35 85,10 65,25' fill='%232d3436'/><circle cx='38' cy='52' r='6' fill='%23f1c40f'/><circle cx='38' cy='52' r='2' fill='%23000'/><circle cx='62' cy='52' r='6' fill='%23f1c40f'/><circle cx='62' cy='52' r='2' fill='%23000'/><path d='M44,68 Q50,62 56,68' stroke='%23ff7675' stroke-width='2.5' fill='none'/></svg>";
     } else {
-        // Идеальное счастливое состояние (милые глазки с бликами)
-        eyesSvg = `
-            <circle cx="36" cy="50" r="8" fill="%23f1c40f"/>
-            <ellipse cx="36" cy="50" rx="2" ry="5" fill="%232d3436"/>
-            <circle cx="34" cy="47" r="1.5" fill="%23fff"/>
-            <circle cx="64" cy="50" r="8" fill="%23f1c40f"/>
-            <ellipse cx="64" cy="50" rx="2" ry="5" fill="%232d3436"/>
-            <circle cx="62" cy="47" r="1.5" fill="%23fff"/>
-        `;
+        cat.src = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%232d3436'/><polygon points='25,35 15,10 35,25' fill='%232d3436'/><polygon points='75,35 85,10 65,25' fill='%232d3436'/><circle cx='38' cy='52' r='6' fill='%23f1c40f'/><ellipse cx='38' cy='52' rx='1.5' ry='4' fill='%232d3436'/><circle cx='36' cy='49' r='1' fill='%23fff'/><circle cx='62' cy='52' r='6' fill='%23f1c40f'/><ellipse cx='62' cy='52' rx='1.5' ry='4' fill='%232d3436'/><circle cx='62' cy='49' r='1' fill='%23fff'/><path d='M45,66 Q48,69 50,66 Q52,69 55,66' stroke='%23ff7675' stroke-width='2' fill='none'/></svg>";
     }
+}
 
-    // Собираем весь SVG рисунок кошечки воедино
-    mesh.innerHTML = `
-        <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://w3.org">
-            <!-- Хвостик -->
-            <path d="M70,75 Q85,60 80,45 Q75,35 70,45" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linecap="round"/>
-            <!-- Задние лапки/тело -->
-            <ellipse cx="50" cy="72" rx="28" ry="18" fill="%232d3436"/>
-            <!-- Передние лапки -->
-            <ellipse cx="40" cy="85" rx="6" ry="10" fill="%232d3436"/>
-            <ellipse cx="60" cy="85" rx="6" ry="10" fill="%232d3436"/>
-            <!-- Ушки -->
-            <path d="M24,44 Q10,12 36,26" fill="%232d3436" stroke="%232d3436" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M26,40 Q16,20 33,27" fill="%23ffb8b8"/>
-            <path d="M76,44 Q90,12 64,26" fill="%232d3436" stroke="#2d3436" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M74,40 Q84,20 67,27" fill="%23ffb8b8"/>
-            <!-- Голова -->
+function calculateOfflineProgress() {
+    const now = Date.now(); const elapsed = (now - petData.lastTime) / 1000;
+    if (elapsed <= 0) return;
+    if (isSleeping) {
+        petData.sleep = Math.min(100, petData.sleep + (elapsed * (7 / 60)));
+        petData.hunger = Math.max(0, petData.hunger - (elapsed * (0.4 / 60)));
+        if (petData.sleep >= 100) isSleeping = false;
+    } else {
+        petData.hunger = Math.max(0, petData.hunger - (elapsed * (0.85 / 60)));
+        petData.sleep = Math.max(0, petData.sleep - (elapsed * (0.65 / 60)));
+        petData.mood = Math.max(0, petData.mood - (elapsed * (1.1 / 60)));
+    }
+    petData.lastTime = now; updateUI();
+}
+
